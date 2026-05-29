@@ -22,17 +22,11 @@ for i = 1:L
 end
 
 % Contract site by site from left to right.
-% After site i, `value` is the partial contraction tensor of shape [Dr_X, Dr_Y].
-% The index structure at each step is:
-%   value_{a,b} = sum_{phys} conj(X_{...,a,phys}) * Y_{...,b,phys}
 value = 1;   % scalar boundary condition at the left edge
 for i = 1:L
     % Contract left bond of X* into current boundary (index 1 of X with index 1 of value)
     value = contracttensors(value, 2, 1, conj(mpoX{i}), 3, 1);
-    % value now has shape: [Dr_value_left, Dr_X, phys]  ->  permute to [Dr_X, Dr_value_left, phys]
     value = permute(value, [2, 1, 3]);
-    % Contract physical + left bond of Y into boundary: indices [2,3] of value with [1,3] of Y
     value = contracttensors(value, 3, [2, 3], mpoY{i}, 3, [1, 3]);
-    % value now has shape [Dr_X, Dr_Y] — the new left boundary
 end
 
