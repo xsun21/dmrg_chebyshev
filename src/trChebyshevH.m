@@ -1,32 +1,13 @@
 function [tr] = trChebyshevH(TnH, mpo)
-% TRCHEBYSHEVH  Compute Tr[T_n(H)] or Tr[O * T_n(H)] from MPO representations.
-%
-%   tr = trChebyshevH(TnH, mpo)
-%
-%   Evaluates the many-body trace of a Chebyshev MPO (or its product with
-%   an observable MPO) by exploiting the MPO structure:
-%
-%       Tr[T_n(H)] = product_{i=1}^{N} tr_i[ TnH{i} ]
-%
-%   where tr_i denotes the trace over the physical indices at site i.
-%   This factorizes because the trace of a tensor product equals the product
-%   of traces: Tr[A ⊗ B] = Tr[A] * Tr[B].
-%
-%   If an observable MPO O is provided, the code first computes the product
-%   MPO U = O * TnH (by contracting physical indices site by site), then
-%   traces U in the same way.
+% Compute Tr[T_n(H)] or Tr[O * T_n(H)] from MPO representations.
 %
 %   INPUTS
-%     TnH - Cell array {1,N} of Chebyshev MPO tensors, each of shape
-%           [Dl, Dr, d, d]. Typically the output of ChebyshevH.
+%     TnH - Cell array {1,N} of Chebyshev MPO tensors, each of shape [Dl, Dr, d, d].
 %     mpo - Optional observable MPO (cell array {1,N} of shape [Dl, Dr, d, d]).
-%           Pass [] to compute Tr[TnH] directly.
 %
 %   OUTPUT
-%     tr  - Scalar trace value. This is the raw (unnormalized) trace, equal
-%           to 2^N * mu_n where mu_n is the n-th Chebyshev moment.
+%     tr  - Scalar trace value. 
 %
-%   SEE ALSO: ChebyshevH, dos, dos_precise
 
 N = length(TnH);
 d = size(TnH{1}, 3);   % physical dimension
@@ -84,10 +65,6 @@ else
 end
 
 % ----- Final contraction: multiply all site-trace matrices -----
-% Because trs{i} are matrices (virtual bond indices), the full trace is
-% their matrix product contracted to a scalar (exploiting open boundaries):
-%   tr = trs{1} * trs{2} * ... * trs{N}
-% which collapses to a scalar because trs{1} has shape [1, Dr] and trs{N} has [Dl, 1].
 tr = 1;
 for i = 1:N
     tr = tr * trs{i};
