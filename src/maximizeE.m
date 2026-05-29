@@ -1,18 +1,5 @@
 function [E, mps] = maximizeE(hset, D, precision, mpsB)
-% MAXIMIZEE  DMRG maximum eigenstate search (single-site, 1D).
-%
-%   [E, mps] = maximizeE(hset, D, precision, mpsB)
-%
-%   Identical in structure to minimizeE, but targets the LARGEST eigenvalue
-%   instead of the smallest. This is used to find the upper edge of the
-%   spectrum (Emax), which is required for the spectral rescaling in isingtr.
-%
-%   The only algorithmic difference from minimizeE is that eigs is called
-%   with 'la' (largest algebraic) instead of 'sr' (smallest real).
-%
-%   INPUTS / OUTPUTS: identical to minimizeE. See minimizeE for full docs.
-%
-%   SEE ALSO: minimizeE, isingtr
+% DMRG maximum eigenstate search (single-site, 1D).
 
 [M, N] = size(hset);
 d      = size(hset{1, 1}, 1);
@@ -29,7 +16,7 @@ P = [];
 while 1
     Evalues = [];
 
-    % ===== Left sweep =====================================================
+    % -------------- Left sweep ---------------
     for j = 1:(N - 1)
         if ~isempty(mpsB)
             B      = mpsB{j};
@@ -57,7 +44,7 @@ while 1
         end
     end
 
-    % ===== Right sweep ====================================================
+    % --------------- Right sweep ----------------
     for j = N:(-1):2
         if ~isempty(mpsB)
             B      = mpsB{j};
