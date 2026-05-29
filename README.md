@@ -5,6 +5,25 @@ A MATLAB implementation of the **Kernel Polynomial Method (KPM)** using **Matrix
 The primary application is the transverse-field Ising model, but the framework is general and can be adapted to any 1D Hamiltonian expressible as an MPO.
 
 ---
+## Physics Background
+
+This code computes the **density of states** using a Chebyshev moment expansion:
+
+$$\rho(E) = \frac{1}{2^N \pi \nu \sqrt{1 - \tilde{E}^2}} \sum_{n=0}^{M-1} g_n \mu_n T_n(\tilde{E})$$
+
+where:
+- $T_n$ are Chebyshev polynomials of the first kind
+- $\mu_n = \mathrm{Tr}[T_n(\tilde{H})]$ are **Chebyshev moments** computed as MPO traces
+- $g_n$ are **Jackson kernel** damping coefficients that suppress Gibbs oscillations
+- $\tilde{H} = (H - b)/\nu$ is the rescaled Hamiltonian mapped to $[-1, 1]$
+- $N$ is the system size (number of sites)
+
+The MPO representation of $T_n(H)$ is built via the three-term Chebyshev recurrence:
+
+$$T_{n+1}(H) = 2H \cdot T_n(H) - T_{n-1}(H)$$
+
+At each step, the MPO bond dimension grows and is truncated using **variational MPS compression** (`reduceD`).
+---
 
 ## Repository Structure
 
