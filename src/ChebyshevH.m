@@ -88,8 +88,7 @@ if n >= 2
         TnH{1} = 2 * TnH{1};
 
         % --- Step 2: Subtract T_{j-1}(H) = T0 ---
-        % MPO subtraction is done by block-diagonal construction in the
-        % virtual (bond) indices — equivalent to direct sum of MPOs.
+        % MPO subtraction is done by block-diagonal construction in the virtual (bond) indices
         %
         % For the leftmost site: append T0 columns to the right bond.
         T0{1} = -T0{1};
