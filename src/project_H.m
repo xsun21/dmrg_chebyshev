@@ -1,11 +1,5 @@
 function [x, y] = project_H(Ecut, Emax, eta, step, sn)
-% PROJECT_H  Compute the spectral function <O>(E) over an energy window.
-%
-%   [x, y] = project_H(Ecut, Emax, eta, step, sn)
-%
-%   Traces out the ratio DOS_O(E) / DOS(E) — i.e. the thermal/microcanonical
-%   expectation value of an observable O as a function of energy E — over
-%   the spectral range [Ecut, Emax].
+% Compute the spectral function <O>(E) over an energy window.
 
 e  = Ecut;
 es = Ecut;
@@ -15,7 +9,7 @@ x = Ecut;
 y = dos(e, N, M, muo, nu, del) / dos(e, N, M, mu, nu, del);
 w = dos(es, N, M, mu, nu, del);   % reference DOS value at current window start
 
-% ===== Phase 1: bulk region — use standard KPM (dos.m) =====
+% --- Phase 1: bulk region — use standard KPM (dos.m) ---
 while 1
     e = e + step;
     p = dos(e, N, M, muo, nu, del);   % numerator DOS (with observable)
@@ -33,10 +27,7 @@ while 1
     end
 end
 
-% ===== Phase 2: edge region - use dos_precise.m with sliding window =======
-% The sliding window [es, es+sn] is advanced as the DOS continues to decay.
-while 1
-    % Reference DOS using precise window starting at es
+% --- Phase 2: edge region - use dos_precise.m with sliding window ---
     w = dos_precise(es, es + sn, M, R, mu, N, nu, del);
 
     while 1
