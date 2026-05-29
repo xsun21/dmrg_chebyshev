@@ -21,8 +21,6 @@ where:
 The MPO representation of $T_n(H)$ is built via the three-term Chebyshev recurrence:
 
 $$T_{n+1}(H) = 2H \cdot T_n(H) - T_{n-1}(H)$$
-
-At each step, the MPO bond dimension grows and is truncated using **variational MPS compression** (`reduceD`).
 ---
 
 ## Repository Structure
