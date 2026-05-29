@@ -31,7 +31,7 @@ mps-chebyshev/
 ├── src/                        # All source functions
 │   ├── ChebyshevH.m            # Main: builds Chebyshev MPO expansion of H
 │   ├── trChebyshevH.m          # Computes Tr[T_n(H)] or Tr[O * T_n(H)]
-│   ├── dos.m                   # Density of states via KPM (standard)
+│   ├── dos.m                   # Density of states via KPM
 │   ├── dos_precise.m           # DOS with separate spectral resolution
 │   ├── reduceD.m               # Variational MPO/MPS bond-dimension compression
 │   ├── minimizeE.m             # DMRG ground-state energy minimization
