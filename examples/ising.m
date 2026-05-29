@@ -7,21 +7,14 @@
 %         + g * sum_{i} sx_i
 %         + h * sum_{i} sz_i
 %
-%   PARAMETERS
-%     N   = 40   lattice sites
-%     D   = 14   MPS bond dimension (increase for better accuracy)
-%     J   = 1    Ising coupling
-%     g   = -1.05 transverse field
-%     h   = 0.5   longitudinal field
-%
 %   OUTPUT
 %     Prints: D=14, E0=<ground state energy>, E1=<max energy>
 %
 
 %% --- Parameters ---
-N         = 40;
-D         = 14;
-J         = 1;
+N         = 40;             % lattice sites
+D         = 14;             % MPS bond dimension
+J         = 1;              
 g         = -1.05;
 h         = 0.5;
 precision = 1e-10;
