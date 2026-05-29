@@ -39,7 +39,7 @@ mps-chebyshev/
 │   ├── prepare.m               # Right-to-left MPS canonicalization
 │   ├── prepare_onesite.m       # Single-site SVD gauge fixing
 │   ├── createrandommps.m       # Random MPS initialization
-│   ├── initCstorage.m          # Initialize environment tensors (C storage)
+│   ├── initCstorage.m          # Initialize environment tensors
 │   ├── updateCleft.m           # Left-to-right environment update
 │   ├── updateCright.m          # Right-to-left environment update
 │   ├── contracttensors.m       # Generic tensor contraction engine
