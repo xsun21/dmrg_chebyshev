@@ -7,10 +7,6 @@
 %         + g * sum_{i} sx_i
 %         + h * sum_{i} sz_i
 %
-%   using single-site DMRG (minimizeE / maximizeE) with bond dimension D.
-%   The resulting E0 and E1 are the spectral bounds Emin and Emax needed
-%   to rescale H for the Chebyshev expansion in isingtr.m.
-%
 %   PARAMETERS
 %     N   = 40   lattice sites
 %     D   = 14   MPS bond dimension (increase for better accuracy)
@@ -18,17 +14,11 @@
 %     g   = -1.05 transverse field
 %     h   = 0.5   longitudinal field
 %
-%   The Hamiltonian is encoded in the "hset" format: an (M x N) cell array
-%   where hset{m,j} is the local operator at site j for term m.
-%   Each term in H is represented as a product of single-site matrices,
-%   stored as M separate rows in hset (M = total number of H terms).
-%
 %   OUTPUT
 %     Prints: D=14, E0=<ground state energy>, E1=<max energy>
 %
-%   SEE ALSO: isingtr, minimizeE, maximizeE
 
-%% --- Parameters ---------------------------------------------------------
+%% --- Parameters ---
 N         = 40;
 D         = 14;
 J         = 1;
@@ -36,13 +26,13 @@ g         = -1.05;
 h         = 0.5;
 precision = 1e-10;
 
-%% --- Pauli matrices and building blocks ---------------------------------
+%% --- Pauli matrices and building blocks ---
 sx = [0, 1; 1, 0];
 sy = [0, -1i; 1i, 0];
 sz = [1, 0; 0, -1];
 id = eye(2);
 
-%% --- Construct Hamiltonian in hset format --------------------------------
+%% --- Construct Hamiltonian in hset format ---
 % H has three types of terms:
 %   (1) N-1 two-site terms: J * sz_j * sz_{j+1}   (j = 1..N-1)
 %   (2) N   one-site terms: g * sx_j              (j = 1..N)
@@ -75,7 +65,7 @@ for j = (2*N):(3*N - 1)
     hset{j, j - 2*N + 1} = h * sz;
 end
 
-%% --- DMRG optimization --------------------------------------------------
+%% --- DMRG optimization ---
 randn('state', 0);   % fix random seed for reproducibility
 
 % Ground state (minimum energy)
