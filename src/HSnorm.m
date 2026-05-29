@@ -1,34 +1,13 @@
 function [value] = HSnorm(mpoX, mpoY)
-% HSNORM  Hilbert-Schmidt inner product of two Matrix Product Operators.
-%
-%   value = HSnorm(mpoX, mpoY)
-%
-%   Computes the Hilbert-Schmidt (Frobenius) inner product between two
-%   MPOs X and Y defined on the same lattice:
-%
-%       <X, Y>_HS = Tr[ X† Y ]
-%
-%   where the trace is over the full many-body Hilbert space. This is used
-%   in ChebyshevH.m to estimate the truncation error after compressing the
-%   Chebyshev MPO:
-%
-%       relative_error ≈ 1 - <T_trunc, T_full>_HS / <T_full, T_full>_HS
-%
-%   The computation is done by contracting the MPO network site by site,
-%   maintaining a left-to-right boundary tensor of shape [Dr_X, Dr_Y].
+% Hilbert-Schmidt inner product of two Matrix Product Operators.
 %
 %   INPUTS
 %     mpoX - Cell array {1,L} of MPO tensors with shape [Dl, Dr, d, d].
 %     mpoY - Cell array {1,L} of MPO tensors with shape [Dl, Dr, d, d].
-%            Both MPOs must be defined on the same lattice with the same d.
 %
 %   OUTPUT
-%     value - Scalar Tr[X† Y].
-%
-%   NOTE
-%     When mpoX == mpoY this gives ||X||^2_HS (squared Frobenius norm).
-%
-%   SEE ALSO: ChebyshevH, contracttensors
+%     value - Scalar
+
 
 L = length(mpoX);
 d = size(mpoX{1}, 3);   % physical dimension
@@ -56,4 +35,4 @@ for i = 1:L
     value = contracttensors(value, 3, [2, 3], mpoY{i}, 3, [1, 3]);
     % value now has shape [Dr_X, Dr_Y] — the new left boundary
 end
-% At the end, value is a scalar = Tr[X† Y]
+
