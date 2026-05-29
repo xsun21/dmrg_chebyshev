@@ -1,8 +1,5 @@
 function [Dos] = dos(E, N, M, mu, nu, del)
-% DOS  Density of states via the Kernel Polynomial Method (KPM).
-%
-%   Dos = dos(E, N, M, mu, nu, del)
-%
+% Density of states via the Kernel Polynomial Method (KPM).
 %   Reconstructs the many-body density of states from Chebyshev moments
 %   using the Jackson kernel to suppress Gibbs oscillations.
 
