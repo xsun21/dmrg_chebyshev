@@ -1,38 +1,16 @@
 function [E, mps] = minimizeE(hset, D, precision, mpsB)
-% MINIMIZEE  DMRG ground-state energy search (single-site, 1D).
-%
-%   [E, mps] = minimizeE(hset, D, precision, mpsB)
-%
-%   Finds the MPS of bond dimension D that minimizes the energy expectation
-%   value <mps|H|mps> using the Density Matrix Renormalization Group (DMRG)
-%   algorithm with single-site optimization. The Hamiltonian H is given as
-%   a sum of local terms (hset).
-%
-%   ALGORITHM
-%     1. Initialize a random MPS and right-canonicalize it.
-%     2. Sweep left-to-right (sites 1..N-1): at each site j, fix all other
-%        tensors and find the optimal A{j} that minimizes the energy using
-%        the Lanczos/Arnoldi eigensolver (eigs with 'sr' = smallest real).
-%     3. Sweep right-to-left (sites N..2): same, but right-canonicalize.
-%     4. Repeat until std(Evalues)/|mean(Evalues)| < precision.
-%
-%   If mpsB is non-empty, the optimization is restricted to the subspace
-%   orthogonal to mpsB at each site (useful for excited state targeting).
+% DMRG ground-state energy search (single-site, 1D).
 %
 %   INPUTS
-%     hset      - (M x N) cell array of local operators. hset{m,j} is a
-%                 (d x d) matrix representing the j-th site factor of the
-%                 m-th term in H = sum_m prod_j hset{m,j}.
-%     D         - Bond dimension (controls accuracy vs. cost).
-%     precision - Convergence tolerance, e.g. 1e-10.
-%     mpsB      - MPS to orthogonalize against (for excited states). Pass []
-%                 to find the unconstrained ground state.
+%     hset      - (M x N) cell array of local operators. 
+%     D         - Bond dimension.
+%     precision - Convergence tolerance.
+%     mpsB      - MPS to orthogonalize against (for excited states). 
 %
 %   OUTPUTS
 %     E   - Ground state energy estimate.
 %     mps - Cell array {1,N} of MPS tensors for the ground state.
 %
-%   SEE ALSO: maximizeE, prepare, initCstorage
 
 [M, N] = size(hset);
 d      = size(hset{1, 1}, 1);
@@ -51,7 +29,7 @@ P = [];   % orthogonal projector (empty = unconstrained)
 while 1
     Evalues = [];
 
-    % ===== Cycle 1: left sweep (sites 1 -> N-1) ==========================
+    % ------ Cycle 1: left sweep (sites 1 -> N-1) ------
     for j = 1:(N - 1)
         % Compute projector onto complement of mpsB at this site
         if ~isempty(mpsB)
@@ -83,7 +61,7 @@ while 1
         end
     end
 
-    % ===== Cycle 2: right sweep (sites N -> 2) ===========================
+    % ------ Cycle 2: right sweep (sites N -> 2) ------
     for j = N:(-1):2
         if ~isempty(mpsB)
             B      = mpsB{j};
@@ -111,7 +89,7 @@ while 1
         end
     end
 
-    % ===== Convergence check =============================================
+    %  Convergence check 
     if std(Evalues) / abs(mean(Evalues)) < precision
         % Absorb final gauge into site 1
         mps{1} = contracttensors(mps{1}, 3, 2, U, 2, 1);
@@ -123,11 +101,7 @@ end
 
 % ==========================================================================
 function [A, E] = minimizeE_onesite(hsetj, Hleft, Hright, P)
-% MINIMIZEE_ONESITE  Solve single-site eigenvalue problem (smallest eigenvalue).
-%
-%   Builds the effective Hamiltonian Heff = sum_m Hleft{m} x Hright{m} x h{m}
-%   in the local subspace [Dl * Dr * d], optionally projects it onto the
-%   subspace orthogonal to P, and finds the lowest eigenstate via eigs.
+% Solve single-site eigenvalue problem (smallest eigenvalue).
 
 DAl = size(Hleft{1}, 1);
 DAr = size(Hright{1}, 1);
@@ -158,10 +132,7 @@ A = reshape(A, [DAl, DAr, d]);
 
 % ==========================================================================
 function [P] = calcprojector_onesite(B, Cleft, Cright)
-% CALCPROJECTOR_ONESITE  Build the projector onto the complement of mpsB.
-%
-%   Projects out the component of the local tensor along mpsB{j} using the
-%   environments. Used for excited state targeting (orthogonality constraint).
+% Build the projector onto the complement of mpsB.
 
 y = contracttensors(Cleft, 3, 3, B, 3, 1);
 y = contracttensors(y, 4, [2, 3], Cright, 3, [2, 3]);
@@ -174,10 +145,7 @@ P = Q(:, 2:end);
 
 % ==========================================================================
 function [Hstorage] = initHstorage(mps, hset, d)
-% INITHSTORAGE  Initialize right-environment storage for the Hamiltonian.
-%
-%   Builds all right boundary tensors Hstorage{m,j} = <mps_{j..N}|h_m|mps_{j..N}>
-%   scanning from site N to site 2.
+% Initialize right-environment storage for the Hamiltonian.
 
 [M, N]    = size(hset);
 Hstorage  = cell(M, N + 1);
