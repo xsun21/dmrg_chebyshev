@@ -1,28 +1,5 @@
 function [B, U, DB] = prepare_onesite(A, direction)
-% PREPARE_ONESITE  Gauge-fix a single MPS tensor using SVD.
-%
-%   [B, U, DB] = prepare_onesite(A, direction)
-%
-%   Performs a QR-like decomposition (via thin SVD) on one MPS site tensor A
-%   to bring it into left- or right-canonical form. This is the fundamental
-%   step in MPS canonicalization.
-%
-%   An MPS tensor A has shape [D1, D2, d] where:
-%     - D1 = left bond dimension
-%     - D2 = right bond dimension
-%     - d  = physical dimension
-%
-%   LEFT-CANONICAL ('lr'):
-%     Reshapes A as (d*D1) x D2, computes A = B_matrix * (S*V'),
-%     then reshapes B_matrix back to [D1, DB, d].
-%     B satisfies B†B = I (left-canonical condition).
-%     The matrix U = S*V' (shape [DB, D2]) is passed to the right neighbor.
-%
-%   RIGHT-CANONICAL ('rl'):
-%     Reshapes A as D1 x (d*D2), computes A = (U*S) * B_matrix,
-%     then reshapes B_matrix back to [DB, D2, d].
-%     B satisfies BB† = I (right-canonical condition).
-%     The matrix U = U*S (shape [D1, DB]) is passed to the left neighbor.
+% Gauge-fix a single MPS tensor using SVD.
 %
 %   INPUTS
 %     A         - MPS site tensor of shape [D1, D2, d].
@@ -31,9 +8,7 @@ function [B, U, DB] = prepare_onesite(A, direction)
 %   OUTPUTS
 %     B  - Isometric tensor in the specified canonical form.
 %     U  - Singular value matrix to be absorbed into the neighboring site.
-%     DB - New bond dimension after truncation (= rank of the reshaped A).
-%
-%   SEE ALSO: prepare, svd2, reduceD
+%     DB - New bond dimension after truncation.
 
 [D1, D2, d] = size(A);
 
