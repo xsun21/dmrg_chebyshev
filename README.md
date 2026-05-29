@@ -21,6 +21,7 @@ where:
 The MPO representation of $T_n(H)$ is built via the three-term Chebyshev recurrence:
 
 $$T_{n+1}(H) = 2H \cdot T_n(H) - T_{n-1}(H)$$
+
 ---
 
 ## Repository Structure
